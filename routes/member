@@ -1,0 +1,35 @@
+const express = require("express");
+const mysql = require('../db-config.js')
+
+const router = express.Router()
+
+const port = 3000;
+router.get("/", (req, res) => {
+    mysql.query(
+        `SELECT * FROM member`,
+        (err, result) => {
+            if (err) {
+                res.status(500).send('Error from Database')
+            } else {
+                res.status(200).json({result})
+            }
+        })
+});
+
+router.get('/:id', (req, res) => {
+    const memberId = req.params.id
+        mysql.query(
+            `SELECT * FROM member WHERE idmember=?`,
+            [memberId],
+            (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).json(result)
+            }
+            }
+    )
+})
+
+module.exports = router
+
