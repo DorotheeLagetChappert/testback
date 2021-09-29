@@ -16,19 +16,36 @@ router.get("/", (req, res) => {
         })
 });
 
+// All Get
+
 router.get('/:id', (req, res) => {
-    const memberId = req.params.id
-        mysql.query(
-            `SELECT * FROM member WHERE idmember=?`,
-            [memberId],
-            (err, result) => {
+    const {id} = req.params
+    const sql = `SELECT * FROM member WHERE id = ?`
+    const values = [id]
+        mysql.query(sql, values, (err, result) => {
             if (err) {
                 res.status(500).send(err)
             } else {
                 res.status(200).json(result)
             }
-            }
+        }
     )
+})
+
+// All post
+
+router.post("/", (req, res) => {
+	const sql = `INSERT INTO member (member_name) VALUES (?)`
+	console.log(req.body)
+	const values = [req.body.member_name]
+	mysql.query(sql, values, (err, result) => {
+		if (err) {
+			res.status(500).send("Error retrieving data from database")
+		} else {
+			console.table(result)
+			res.status(200).json(result)
+		}
+	})
 })
 
 module.exports = router
